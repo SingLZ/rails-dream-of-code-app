@@ -1,0 +1,19 @@
+Question 1:
+Trimester.find_by(year:'2025', term:'Spring')
+Trimester.find_by(year:'2025', term:'Spring')
+course = Course.find_by(coding_class_id: 1 , trimester_id: 5).id
+enrollments = Enrollment.where(course_id: 5)
+student_ids = enrollments.limit(2).pluck(:student_id)
+students = Student.where(id: student_ids)
+students.each do |student|
+    puts "#{student.id},#{student.email}"
+end
+
+Question 2:
+ungraded_enrollments = Enrollment.where(course_id: 5, final_grade: nil)
+mentor_enrollment_assignments = MentorEnrollmentAssignment.where(enrollment_id: ungraded_enrollments.pluck(:id))
+mentor_ids = mentor_enrollment_assignments.limit(2).pluck(:mentor_id)
+mentors = Mentor.where(id: mentor_ids)
+mentors.each do |mentor|
+    puts "#{mentor.id},#{mentor.email}"
+end
