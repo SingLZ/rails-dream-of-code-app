@@ -1,0 +1,73 @@
+Question 1:
+Trimester.create(year: '2026', term: 'Spring', application_deadline: '2026-02-15', start_date: "2026-03-01", end_date: "2026-06-30")
+spring2026 = Trimester.find_by(year: '2026', term: 'Spring')
+CodingClass.all.each do |cc|
+  puts "Would create course for #{cc.title}"
+end
+CodingClass.all.each do |cc|
+  Course.create(coding_class_id: cc.id, trimester: spring2026)
+end
+
+Question 2:
+intro_course = Course.find_by(coding_class_id:"1", trimester: spring2026)
+student = Student.create(first_name: "Sing",last_name: "Zheng",  email: "sing@example.com")
+enrollment = Enrollment.create(student_id: student.id, course_id: intro_course.id)
+mentor = nil
+Mentor.all.each do |m|
+  count = MentorEnrollmentAssignment.where(mentor_id: m.id).count
+  if count <= 2
+    mentor = m
+    break
+  end
+end
+unless mentor
+  mentor = Mentor.create(first_name: "New Mentor Name", last_name: "last name")
+end
+MentorEnrollmentAssignment.create(mentor_id: mentor.id, enrollment_id: enrollment.id)
+
+Question 3:
+Project Description: Plant Tracker App
+Overview:
+The Plant Tracker App helps plant owners monitor the health and growth of their plants. Users can track watering schedules, sunlight exposure, fertilizer use, and growth progress. The app aims to make plant care easier by sending reminders and providing a history of care activities for each plant.
+Users and Roles:
+    Plant Owners (Primary Users): Can add and manage their plants, track care activities, and receive reminders.
+    Optional: Guests: Can browse general plant care tips but cannot track plants unless they create an account.
+Core Features and User Scenarios:
+    A user can create an account and add plants to their personal plant list.
+    A user can record care activities (watering, fertilizing, repotting, pruning).
+    A user can upload photos and notes to track plant growth over time.
+    A user can set reminders for watering or fertilizing schedules.
+    A user can view a history of care activities for each plant.
+    A user can edit or delete a plant if they no longer own it.
+    A user can share plant care tips with other users.
+User Flow Example:
+    A user creates an account and logs in.
+    The user adds a new plant, providing details such as plant name, species, and care preferences (e.g., watering frequency).
+    The user receives automated reminders for watering or fertilizing.
+    The user logs care activities (e.g., "Watered 200 ml" or "Added fertilizer").
+    The user can view a plant’s history, including notes and photos of growth progress.
+
+  Question 4:
+  1. Users Table (users)
+    id (primary key)
+    first_name (string)
+    last_name (string)
+    email (string, unique)
+    password(string)
+    created_at, updated_at (timestamps)
+2. Plants Table (plants)
+    id (primary key)
+    user_id (foreign key, belongs to a user)
+    name (string – user’s given name for the plant)
+    species (string – plant type, e.g., "Monstera Deliciosa")
+    location (string – optional, e.g., "Living Room")
+    watering_frequency (integer – e.g., every X days)
+    last_watered_at (datetime – for quick reference)
+    created_at, updated_at
+
+  USERS (id, first_name, last_name, email, password_digest)
+    │
+    └──< PLANTS (id, user_id, name, species, watering_frequency)
+            │
+            
+

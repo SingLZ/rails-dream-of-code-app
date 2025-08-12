@@ -1,0 +1,14 @@
+1. I think I need two tables. One name topics and one name lesson_topics to associate the lesson and topics.
+2. For the topic table I need the id and the name of the topic. For the lesson_topics table I would have the lesson id and the topic id. 
+3. I don't think any additional data is needed.
+4. 
+topics
+- id: int
+- name: string
+lesson_topics
+- id: int
+- lesson_id: reference
+- topic_id: reference
+5. 
+bin/rails generate migration create_topics
+bin/rails generate migration create_lesson_topics
