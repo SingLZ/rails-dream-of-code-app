@@ -10,11 +10,17 @@
   </p>
 
   <strong>Enrolled students</strong>
-  <ul>
-    <% course.enrollments.each do |enrollment| %>
-      <li><%= enrollment.student.full_name %></li>
-    <% end %>
-  </ul>
+
+  <% if course.enrollments.any? %>
+    <ul>
+      <% course.enrollments.each do |enrollment| %>
+        <li><%= enrollment.student.full_name %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No students enrolled yet.</p>
+  <% end %>
+
 
   <p>
     <strong>Max enrollment:</strong>
