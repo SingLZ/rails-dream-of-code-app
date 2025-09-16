@@ -1,4 +1,4 @@
-<%= form_with(model: [@course, @submission]) do |form| %>
+<%= form_with(model: [@enrollment, @submission]) do |form| %>
   <div class="field">
     <%= form.label :lesson_id, "Lesson" %>
     <%= form.collection_select :lesson_id, @lessons, :id, :title %>

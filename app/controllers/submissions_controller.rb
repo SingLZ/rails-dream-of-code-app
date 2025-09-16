@@ -1,15 +1,16 @@
 class SubmissionsController < ApplicationController
   # GET /submissions/new
+  before_action :set_enrollment
+  before_action :set_submission, only: [:edit, :update, :show, :destroy]
+
   def new
-    @course = Course.find(params[:course_id])
     @submission = Submission.new
     @enrollments = @course.enrollments  # TODO: What set of enrollments should be listed in the dropdown?
     @lessons = @course.lessons    # TODO: What set of lessons should be listed in the dropdown?
-     @students = @course.enrollments.includes(:student).map(&:student)
+    @students = @course.enrollments.includes(:student).map(&:student)
   end
 
   def create
-    @course = Course.find(params[:course_id])
     @submission = Submission.new(submission_params)
 
     if @submission.save
@@ -31,6 +32,13 @@ class SubmissionsController < ApplicationController
   end
 
   private
+    def set_enrollment
+      @enrollment = Enrollment.find(params[:enrollment_id])
+    end
+
+    def set_submission
+      @submission = @enrollment.submissions.find(params[:id])
+    end
     # Only allow a list of trusted parameters through.
     def submission_params
       params.require(:submission).permit(:lesson_id, :enrollment_id, :mentor_id, :review_result, :reviewed_at)
