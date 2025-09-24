@@ -2,6 +2,8 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new
   before_action :set_enrollment
   before_action :set_submission, only: [:edit, :update, :show, :destroy]
+  before_action :require_student, only: [:new, :create]
+  before_action :require_mentor, only: [:edit, :update]
 
   def new
     @submission = Submission.new
