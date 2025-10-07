@@ -1,20 +1,44 @@
+# spec/requests/trimesters_spec.rb
 require "rails_helper"
 
 RSpec.describe "Trimesters", type: :request do
-  let!(:trimester) do
-  Trimester.create!(
-    term: "Fall",
-    year: 2025,
-    application_deadline: Date.today,
-    start_date: Date.new(2025, 9, 1),
-    end_date: Date.new(2025, 12, 15)
-      )
-    end
+  # Real login helper that uses your SessionsController#create
+  def login_as(user, password:)
+    post "/login", params: { username: user.username, password: password }
+    # optional: assert the login worked
+    expect(response).to be_redirect
+    follow_redirect! if response.redirect?
+  end
 
+  before do
+    # Admin user + login
+    pw = "secret123"
+    @admin = User.create!(
+      username: "admin_user",
+      role: "admin",
+      password: pw,
+      password_confirmation: pw
+    )
+    login_as(@admin, password: pw)
+  end
+
+  let!(:trimester) do
+    Trimester.create!(
+      term: "Fall",
+      year: 2025,
+      application_deadline: Date.today,
+      start_date: Date.new(2025, 9, 1),
+      end_date: Date.new(2025, 12, 15)
+    )
+  end
 
   describe "GET /trimesters/:id/edit" do
     it "renders the edit form with application deadline field" do
       get edit_trimester_path(trimester)
+
+      # If this fails with :found (302), your login route isn't wired correctly.
+      expect(response).to have_http_status(:ok)
+
       expect(response.body).to include("Application deadline")
     end
   end
@@ -27,7 +51,7 @@ RSpec.describe "Trimesters", type: :request do
     end
 
     it "returns 400 when deadline is missing" do
-      put trimester_path(trimester), params: { trimester: { } }
+      put trimester_path(trimester), params: { trimester: {} }
       expect(response).to have_http_status(:bad_request)
     end
 
