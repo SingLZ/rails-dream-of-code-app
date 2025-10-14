@@ -1,11 +1,31 @@
-<% content_for :title, "New course" %>
+<%= form_with(model: @course) do |form| %>
+  <% if @course.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@course.errors.count, "error") %> prohibited this course from being saved:</h2>
+      <ul>
+        <% @course.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<h1>New course</h1>
+  <div class="field">
+    <%= form.label :coding_class_id, "Coding Class" %>
+    <%= form.collection_select :coding_class_id, CodingClass.all, :id, :title %>
+  </div>
 
-<%= render "form", course: @course %>
+  <div class="field">
+    <%= form.label :trimester_id, "Trimester" %>
+    <%= form.collection_select :trimester_id, Trimester.all, :id, :display_name %>
+  </div>
 
-<br>
+  <div class="field">
+    <%= form.label :max_enrollment %>
+    <%= form.number_field :max_enrollment %>
+  </div>
 
-<div>
-  <%= link_to "Back to courses", courses_path %>
-</div>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

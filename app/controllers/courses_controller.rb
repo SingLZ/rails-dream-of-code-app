@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: %i[ show edit update destroy ]
-
+before_action :require_admin, only: [:new, :create, :edit, :update, :destroy]
   # GET /courses or /courses.json
   def index
     @courses = Course.all
@@ -21,6 +21,20 @@ class CoursesController < ApplicationController
 
   # POST /courses or /courses.json
   def create
+    @course = Course.new(course_params)
+
+    respond_to do |format|
+      if @course.save
+        # Redirect to the course page
+        format.html { redirect_to @course, notice: "Course was successfully created." }
+        format.json { render :show, status: :created, location: @course }
+      else
+        # Re-render the new course form. The view already contains
+        # logic to display the errors in @course.errors
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @course.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /courses/1 or /courses/1.json
